@@ -79,27 +79,31 @@
 			var A = args.A; // left/top frame
 			var B = args.B; // right/bottom frame
 
-			// Only allow jQuery objects or DOM elements for pane references.
-			// Reject string inputs to avoid selector/HTML interpretation.
+			// Only allow actual DOM element references for panes.
+			// Reject strings and non-element values to avoid selector/HTML interpretation.
+			var aElem = null;
 			if (A && A.jquery) {
-				// already a jQuery object
+				aElem = A[0];
 			} else if (A && A.nodeType === 1) {
-				A = $([A]);
-			} else {
+				aElem = A;
+			}
+			if (!aElem || aElem.nodeType !== 1) {
 				throw new Error("splitter: option 'A' must be a jQuery object or DOM element");
 			}
 
+			var bElem = null;
 			if (B && B.jquery) {
-				// already a jQuery object
+				bElem = B[0];
 			} else if (B && B.nodeType === 1) {
-				B = $([B]);
-			} else {
+				bElem = B;
+			}
+			if (!bElem || bElem.nodeType !== 1) {
 				throw new Error("splitter: option 'B' must be a jQuery object or DOM element");
 			}
 
 			// Use normalized local references after validation.
-			var paneA = A;
-			var paneB = B;
+			var paneA = $(aElem);
+			var paneB = $(bElem);
 			
 			// Reduce the splitter to an integer size to avoid
 			// float problems with a non-integer width property.
